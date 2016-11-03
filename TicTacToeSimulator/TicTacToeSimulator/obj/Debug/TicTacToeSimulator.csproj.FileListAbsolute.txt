@@ -7,3 +7,12 @@ c:\users\tjenkins20\documents\visual studio 2015\Projects\TicTacToeSimulator\Tic
 c:\users\tjenkins20\documents\visual studio 2015\Projects\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.csproj.GenerateResource.Cache
 c:\users\tjenkins20\documents\visual studio 2015\Projects\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.exe
 c:\users\tjenkins20\documents\visual studio 2015\Projects\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.pdb
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\bin\Debug\TicTacToeSimulator.exe.config
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.exe
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.pdb
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\bin\Debug\TicTacToeSimulator.exe
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\bin\Debug\TicTacToeSimulator.pdb
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.csprojResolveAssemblyReference.cache
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.TicTacToe.resources
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.Properties.Resources.resources
+H:\C#\TicTacToeGame-WatchGame-master\TicTacToeGame-WatchGame-master\TicTacToeSimulator\TicTacToeSimulator\obj\Debug\TicTacToeSimulator.csproj.GenerateResource.Cache

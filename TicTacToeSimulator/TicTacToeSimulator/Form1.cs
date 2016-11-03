@@ -14,7 +14,10 @@ namespace TicTacToeSimulator
     {
         //Variables:
         bool turn = true; // true = x turn; false = o turn;
-        int turn_count = 0;
+        
+        const int ROWCOUNT = 3;
+        const int COLCOUNT = 3;
+        String[,] letters = new String[ROWCOUNT, COLCOUNT]; //Array to hold the letters
 
         public TicTacToe()
         {
@@ -22,11 +25,191 @@ namespace TicTacToeSimulator
             turnIdentiferLabel.Text = "Player X's Turn.";
         }
 
+        private Random trueRandom()
+        {
+            Random rnd = new Random(DateTime.Now.Millisecond);
+
+            return rnd;
+        }//End trueRandom
+
+        private void randomize()
+        {
+            int lRow;
+            int lCol;
+            
+            for (int row = 0; row < ROWCOUNT; row++)
+            {
+                for (int col = 0; col < COLCOUNT; col++)
+                {
+                    while (letters[row, col] == null)
+                    {
+                        lRow = trueRandom().Next(0, 3);
+                        lCol = trueRandom().Next(0, 3);
+
+                        if (turn == true && letters[lRow, lCol] == null)
+                        {
+                            letters[lRow, lCol] = "X";
+                            turn = false;
+                        }
+                        else if (turn == false && letters[lRow, lCol] == null)
+                        {
+                            letters[lRow, lCol] = "O";
+                            turn = true;
+                        }
+                        
+
+                    }
+
+                }
+            }
+        }//End randomize
+        
+        private void updateView()
+        {
+            var labels = new[] { A1, A4, A7, A2, A5, A8, A3, A6, A9 };
+            int count = 0;
+
+            for (int row = 0; row < ROWCOUNT; row++)
+            {
+                for (int col = 0; col < COLCOUNT; col++)
+                {
+                    labels[count].Text = letters[row, col];
+                    labels[count].Enabled = false;
+                    count++;
+                }
+            }
+            
+            bool isWinner = checkForWinner();
+            //If winner is found show the winner.
+            if (isWinner)
+            {
+                displayWinner(isWinner);
+            }
+        }//End updateView method  
+
+        private void populateGameboard(object sender, EventArgs e)
+        {
+            clear();
+            turn = true;
+            InstructionsLabel.Visible = true;
+            turnIdentiferLabel.Visible = false;
+            randomize();
+            updateView();
+        }//End populateGameboard
+
+        //
+        // Code used for multiplayer and watch game
+        //
+        /**********************************************************************
+        * The checkForWinner method will check each turn to see if anyone has*
+        * won the game.                                                      *
+        **********************************************************************/
+        private bool checkForWinner()
+        {
+            //Variables
+            bool isWinner = false;
+
+            //Check Horizontal
+            if ((A1.Text == A2.Text) && (A2.Text == A3.Text) && (!A1.Enabled))
+            {
+                isWinner = true;
+            }
+            else if ((A4.Text == A5.Text) && (A5.Text == A6.Text) && (!A4.Enabled))
+            {
+                isWinner = true;
+            }
+            else if ((A7.Text == A8.Text) && (A8.Text == A9.Text) && (!A7.Enabled))
+            {
+                isWinner = true;
+            }
+
+            //Check Vertical
+            if ((A1.Text == A4.Text) && (A4.Text == A7.Text) && (!A1.Enabled))
+            {
+                isWinner = true;
+            }
+            else if ((A2.Text == A5.Text) && (A5.Text == A8.Text) && (!A2.Enabled))
+            {
+                isWinner = true;
+            }
+            else if ((A3.Text == A6.Text) && (A6.Text == A9.Text) && (!A3.Enabled))
+            {
+                isWinner = true;
+            }
+
+            //Check Vertical
+            if ((A1.Text == A5.Text) && (A5.Text == A9.Text) && (!A1.Enabled))
+            {
+                isWinner = true;
+            }
+            else if ((A3.Text == A5.Text) && (A5.Text == A7.Text) && (!A7.Enabled))
+            {
+                isWinner = true;
+            }
+
+            return isWinner;
+        }//end checkForWinner
+
+        private void displayWinner(bool isWinner)
+        {
+            String winner;
+            if (turn)
+            {
+                winner = "O";
+                o_win_count.Text = (Int32.Parse(o_win_count.Text) + 1).ToString();
+                MessageBox.Show(winner + " Wins!", "Winner!");
+            }
+            else if (!turn)
+            {
+                winner = "X";
+                x_win_count.Text = (Int32.Parse(x_win_count.Text) + 1).ToString();
+                MessageBox.Show(winner + " Wins!", "Winner!");
+            }
+        }
+
+        /***********************************************************************
+         * The clearButton_Click handler will reset all the score values.      *
+         ***********************************************************************/
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            o_win_count.Text = "0";
+            x_win_count.Text = "0";
+        }//end clearButton_Click
+
         private void exitButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        private void clear()
+        {
+            var labels = new[] { A1, A4, A7, A2, A5, A8, A3, A6, A9 };
+            int count = 0;
+
+            //Clear the labels Array
+            for (int row = 0; row < ROWCOUNT; row++)
+            {
+                for (int col = 0; col < COLCOUNT; col++)
+                {
+                    labels[count].Text = "";
+                    labels[count].Enabled = true;
+                    count++;
+                }
+            }
+
+            //Clear the letters array
+            for (int row = 0; row < ROWCOUNT; row++)
+            {
+                for (int col = 0; col < COLCOUNT; col++)
+                {
+                    letters[row, col] = null;
+                }
+            }
+        }//End the button1_Click (Clears labels array and letters array)
+
+        //
+        // Code that makes game multiplayer
+        //
         /************************************************************************
          * square_click event handler allow the user to take turns making a mark*
          * on the board to determine a winner.                                  *
@@ -46,86 +229,15 @@ namespace TicTacToeSimulator
 
             turn = !turn; //Changes the turn 
             xo.Enabled = false;
-            turn_count++;
-            checkForWinner();
-            
-        }//end square_click
-
-        /**********************************************************************
-         * The checkForWinner method will check each turn to see if anyone has*
-         * won the game.                                                      *
-         **********************************************************************/
-        private void checkForWinner()
-        {
-            bool isWinner = false;
-
-            //Check Horizontal
-            if((A1.Text == A2.Text) && (A2.Text == A3.Text) && (!A1.Enabled))
-            {
-                isWinner = true;
-            }
-            else if ((B1.Text == B2.Text) && (B2.Text == B3.Text) && (!B1.Enabled))
-            {
-                isWinner = true;
-            }
-            else if ((C1.Text == C2.Text) && (C2.Text == C3.Text) && (!C1.Enabled))
-            {
-                isWinner = true;
-            }
-
-            //Check Vertical
-            if ((A1.Text == B1.Text) && (B1.Text == C1.Text) && (!A1.Enabled))
-            {
-                isWinner = true;
-            }
-            else if ((A2.Text == B2.Text) && (B2.Text == C2.Text) && (!A2.Enabled))
-            {
-                isWinner = true;
-            }
-            else if ((A3.Text == B3.Text) && (B3.Text == C3.Text) && (!A3.Enabled))
-            {
-                isWinner = true;
-            }
-
-            //Check Vertical
-            if ((A1.Text == B2.Text) && (B2.Text == C3.Text) && (!A1.Enabled))
-            {
-                isWinner = true;
-            }
-            else if ((A3.Text == B2.Text) && (B2.Text == C1.Text) && (!C1.Enabled))
-            {
-                isWinner = true;
-            }
-           
-
+            bool isWinner = checkForWinner();
             //If winner is found show the winner.
             if (isWinner)
             {
                 disableSquares(); //disable buttons if theres a winner
-
-                String winner;
-                if (turn)
-                {
-                    winner = "O";
-                    o_win_count.Text = (Int32.Parse(o_win_count.Text) + 1).ToString();
-                }
-                else
-                {
-                    winner = "X";
-                    x_win_count.Text = (Int32.Parse(x_win_count.Text) + 1).ToString();
-                }
-                MessageBox.Show(winner + " Wins!", "Winner!");
+                displayWinner(isWinner);
             }
-            else //Show there was a tie.
-            {
-                if(turn_count == 9)
-                {
-                  MessageBox.Show("There was a draw.", "TIE!");
-                  tie_win_count.Text = (Int32.Parse(tie_win_count.Text) + 1).ToString();
-                }
-            }
-        }//end checkForWinner
-
+        }//end square_click
+        
         /**********************************************************************
          * The showTurn method will reset all the values so that a new game   *
          * can begin.                                                         *
@@ -144,16 +256,18 @@ namespace TicTacToeSimulator
          **********************************************************************/
         private void disableSquares()
         {
-            A1.Enabled = false;
-            A2.Enabled = false;
-            A3.Enabled = false;
-            B1.Enabled = false;
-            B2.Enabled = false;
-            B3.Enabled = false;
-            C1.Enabled = false;
-            C2.Enabled = false;
-            C3.Enabled = false;
+            var labels = new[] { A1, A4, A7, A2, A5, A8, A3, A6, A9 };
+            int count = 0;
 
+            //Clear the labels Array
+            for (int row = 0; row < ROWCOUNT; row++)
+            {
+                for (int col = 0; col < COLCOUNT; col++)
+                {
+                    labels[count].Enabled = false;
+                    count++;
+                }
+            }
         }//end disableSquares
 
         /***********************************************************************
@@ -162,219 +276,13 @@ namespace TicTacToeSimulator
          ***********************************************************************/
         private void startNewGame(object sender, EventArgs e)
         {
+            InstructionsLabel.Visible = false;
+            turnIdentiferLabel.Visible = true;
             turn = true;
-            turn_count = 0;
             turnIdentiferLabel.Text = "Player X's Turn.";
+            clear();
 
-            A1.Enabled = true;
-            A2.Enabled = true;
-            A3.Enabled = true;
-            B1.Enabled = true;
-            B2.Enabled = true;
-            B3.Enabled = true;
-            C1.Enabled = true;
-            C2.Enabled = true;
-            C3.Enabled = true;
-
-            A1.Text = "";
-            A2.Text = "";
-            A3.Text = "";
-            B1.Text = "";
-            B2.Text = "";
-            B3.Text = "";
-            C1.Text = "";
-            C2.Text = "";
-            C3.Text = "";
         }//end startNewGame
-
-        /***********************************************************************
-         * The clearButton_Click handler will reset all the score values.      *
-         ***********************************************************************/
-        private void clearButton_Click(object sender, EventArgs e)
-        {
-            o_win_count.Text = "0";
-            x_win_count.Text = "0";
-            tie_win_count.Text = "0";
-        }//end clearButton_Click
-
-
-        private void populateGameboard(object sender, EventArgs e)
-        {
-            const int ROWS = 3;
-            const int COLS = 3;
-            int[,] gameboard = new int[ROWS, COLS];
-
-            int xCount = 0;
-            int oCount = 0;
-            Random rand = new Random();
-            //Fill Array with Random Numbers
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-                    
-                        if (gameboard[i, j]==0)
-                            {
-                                A1.Text= "X";
-                                xCount++;
-                            }
-                            else
-                            {
-                                A1.Text = "O";
-                                oCount++;
-                            }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            A2.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            A2.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            A3.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            A3.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            B1.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            B1.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            B2.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            B2.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            B3.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            B3.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0 && xCount < 5)
-                        {
-                            C1.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            C1.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            C2.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            C2.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-                for (int i = 0; i < ROWS; i++)
-                {
-                    for (int j = 0; j < COLS; j++)
-                    {
-                        gameboard[i, j] = rand.Next(2);
-
-                        if (gameboard[i, j] == 0)
-                        {
-                            C3.Text = "X";
-                            xCount++;
-                        }
-                        else
-                        {
-                            C3.Text = "O";
-                            oCount++;
-                        }
-                    }
-                }
-
-            /*foreach(int val in gameboard)
-            {
-                MessageBox.Show(val.ToString());
-            }*/
-        }
+        
     }
 }
